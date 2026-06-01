@@ -21,7 +21,7 @@ const BenefitText = ({ text, isArabic }: { text: string; isArabic: boolean }) =>
 
   if (bulletStart === -1) {
     return (
-      <p className="text-xl font-medium leading-relaxed text-gray-200 md:text-2xl lg:text-3xl">
+      <p className="whitespace-pre-line text-xl font-medium leading-relaxed text-gray-200 md:text-2xl lg:text-3xl">
         {text}
       </p>
     );

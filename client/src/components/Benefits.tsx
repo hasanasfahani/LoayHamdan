@@ -15,6 +15,42 @@ interface BenefitRowProps {
   isArabic: boolean;
 }
 
+const BenefitText = ({ text, isArabic }: { text: string; isArabic: boolean }) => {
+  const lines = text.split("\n");
+  const bulletStart = lines.findIndex((line) => line.trim().startsWith("* "));
+
+  if (bulletStart === -1) {
+    return (
+      <p className="text-xl font-medium leading-relaxed text-gray-200 md:text-2xl lg:text-3xl">
+        {text}
+      </p>
+    );
+  }
+
+  const bulletEnd = lines.findIndex((line, index) => index > bulletStart && !line.trim().startsWith("* "));
+  const normalizedBulletEnd = bulletEnd === -1 ? lines.length : bulletEnd;
+  const intro = lines.slice(0, bulletStart).join(" ");
+  const bullets = lines.slice(bulletStart, normalizedBulletEnd).map((line) => line.replace(/^\*\s*/, ""));
+  const outro = lines.slice(normalizedBulletEnd).join(" ");
+
+  return (
+    <div className="text-xl font-medium leading-relaxed text-gray-200 md:text-2xl lg:text-3xl">
+      {intro && <p>{intro}</p>}
+      <ul
+        dir={isArabic ? "rtl" : "ltr"}
+        className={`mx-auto my-3 w-fit list-disc space-y-1 ${
+          isArabic ? "pr-7 text-right" : "pl-7 text-left"
+        }`}
+      >
+        {bullets.map((bullet) => (
+          <li key={bullet}>{bullet}</li>
+        ))}
+      </ul>
+      {outro && <p>{outro}</p>}
+    </div>
+  );
+};
+
 const IPhoneMockup = ({ screenshot, alt }: { screenshot: string; alt: string }) => (
   <div className="relative mx-auto w-[280px] md:w-[320px]">
     {/* iPhone Frame */}
@@ -59,9 +95,7 @@ const BenefitRow = ({ icon: Icon, text, screenshot, reverse = false, index, isAr
       <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10 mb-6">
         <Icon className="h-8 w-8 text-primary" />
       </div>
-      <p className="text-xl md:text-2xl lg:text-3xl leading-relaxed text-gray-200 font-medium">
-        {text}
-      </p>
+      <BenefitText text={text} isArabic={isArabic} />
     </div>
     
     {/* iPhone Mockup */}
